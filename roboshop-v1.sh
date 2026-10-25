@@ -42,6 +42,8 @@ do
     r53_record="$domain_name"
     fi
 
+    echo $r53_record
+
     #Updating Route53 record
     aws route53 change-resource-record-sets \
         --hosted-zone-id $hosted_zone_id \
