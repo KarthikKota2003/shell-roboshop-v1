@@ -24,7 +24,7 @@ do
     echo "This is the instance id of $instance : $instance_id"
 
     #Querying IP Address with instance id and setting r53 record
-    if (( $instance != "frontend" )); then
+    if [[ $instance != "frontend" ]]; then
         IP=$(
         aws ec2 describe-instances \
         --instance-ids "$instance_id" \
