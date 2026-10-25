@@ -33,7 +33,7 @@ echo "$(timestamp) ${B}[INFO]${N} ==== Script started execution ====" | tee -a $
 
 #Checking if the script is running under root user or not
 user_id=$(id -u)
-if (( $user_id ! = 0 )); then
+if (( $user_id != 0 )); then
     echo "This script is not running under root user, please check..." | tee -a $logs_file
 else
     echo "Running under root user..." | tee -a $logs_file
