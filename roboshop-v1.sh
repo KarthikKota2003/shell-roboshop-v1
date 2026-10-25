@@ -42,7 +42,7 @@ do
         r53_record="$domain_name"
     fi
 
-    echo $r53_record
+    echo "Record: $r53_record"
 
     #Updating Route53 record
     aws route53 change-resource-record-sets \
@@ -58,5 +58,7 @@ do
                 }
             }]
         }'
+    
+    echo "Updated record for $r53_record"
 
 done
