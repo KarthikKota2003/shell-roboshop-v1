@@ -27,7 +27,7 @@ validate(){
     fi
 }
 
-echo "$(timestamp) ${B}[INFO]${N} ==== Script started execution ====" | tee -a $logs_file
+echo -e "$(timestamp) ${B}[INFO]${N} ==== Script started execution ====" | tee -a $logs_file
 
 #Checking if the script is running under root user or not
 user_id=$(id -u)
@@ -52,4 +52,4 @@ mysql_secure_installation --set-root-pass RoboShop@1
 validate $? "Setting MySQL root password"
 
 echo "Total time for script execution is $SECONDS"
-echo "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
+echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
