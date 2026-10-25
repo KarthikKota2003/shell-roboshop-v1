@@ -26,7 +26,7 @@ validate(){
 
 #Checking if the script is running under root user or not
 user_id=$(id -u)
-if (( $user_id ! = 0)); then
+if (( $user_id ! = 0) ); then
     echo "This script is not running under root user, please check..." | tee -a $logs_file
 else
     echo "Running under root user..." | tee -a $logs_file
@@ -41,3 +41,10 @@ systemctl enable mongod &>> $logs_file
 systemctl start mongod &>> $logs_file
 validate $? "Starting mongodb"
 
+#Configuring mongodb
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
+validate $? "Configuring mongodb"
+
+#Restarting mongodb
+systemctl restart mongod &>> $logs_file
+validate $? "Restarting mongodb"
