@@ -11,9 +11,14 @@ R="\e[31m"
 G="\e[32m" 
 Y="\e[33m"
 N="\e[0m"
+B="\e[34m"
 
 #Copying mongo repo from local file to /etc/yum.repos.d location
 cp mongo.repo /etc/yum.repos.d/mongo.repo
+
+timestamp(){
+    date "+%F %T"
+}
 
 #Function to validate command execution
 validate(){
@@ -24,9 +29,11 @@ validate(){
     fi
 }
 
+echo "$(timestamp) ${B}[INFO]${N} ==== Script started execution ====" | tee -a $logs_file
+
 #Checking if the script is running under root user or not
 user_id=$(id -u)
-if (( $user_id ! = 0) ); then
+if (( $user_id ! = 0 )); then
     echo "This script is not running under root user, please check..." | tee -a $logs_file
 else
     echo "Running under root user..." | tee -a $logs_file
@@ -48,3 +55,6 @@ validate $? "Configuring mongodb"
 #Restarting mongodb
 systemctl restart mongod &>> $logs_file
 validate $? "Restarting mongodb"
+
+echo "Total time for script execution is $SECONDS"
+echo "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
