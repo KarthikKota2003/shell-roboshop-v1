@@ -21,6 +21,7 @@ validate(){
         echo -e "${2} is ${R}FAILED${N}" | tee -a $logs_file
     else
         echo -e "${2} is ${G}SUCCESS${N}" | tee -a $logs_file 
+    fi
 }
 
 #Checking if the script is running under root user or not
