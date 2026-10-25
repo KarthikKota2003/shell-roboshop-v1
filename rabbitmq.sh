@@ -51,8 +51,9 @@ validate $? "Starting RabbitMQ"
 
 #Configuring Rabbitmq
 rabbitmqctl add_user roboshop roboshop123
+validate $? "Adding Rabbitmq User"
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
-validate $? "Configuring Rabbitmq"
+validate $? "Setting Rabbitmq Permissions"
 
 echo "Total time for script execution is $SECONDS"
 echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
