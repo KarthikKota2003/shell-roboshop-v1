@@ -99,7 +99,7 @@ else
     echo -e "Data already exists ... ${Y}SKIPPING${N}"
 fi
 
-#Restarting catalogue service
+#Restarting catalogue service to refresh service file again
 systemctl restart catalogue
 validate $? "Restarting Catalogue"
 
