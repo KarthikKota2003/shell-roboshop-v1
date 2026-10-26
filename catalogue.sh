@@ -82,6 +82,7 @@ cp $script_dir/catalogue.service /etc/systemd/system/catalogue.service
 systemctl daemon-reload
 systemctl enable catalogue
 systemctl start catalogue
+validate $? "Starting Catalogue Service"
 
 cp $script_dir/mongo.repo /etc/yum.repos.d/mongo.repo
 
