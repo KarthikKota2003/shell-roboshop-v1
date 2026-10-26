@@ -1,6 +1,7 @@
 #!/bin/bash
 
 domain_name="kartheekops92.online"
+script_dir=dirname "$(realpath $0)"
 
 # Creating logs folder and logs file
 logs_folder="/var/log/roboshop"
@@ -66,7 +67,7 @@ validate $? "Installing dependencies"
 
 #Creating SystemD file
 sed -i "s/DOMAIN_NAME/$domain_name/g" catalogue.service
-cp catalogue.service /etc/systemd/system/catalogue.service
+cp $script_dir/catalogue.service /etc/systemd/system/catalogue.service
 
 #Starting catalogue service
 systemctl daemon-reload
