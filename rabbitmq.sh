@@ -50,7 +50,8 @@ systemctl start rabbitmq-server &>> $logs_file
 validate $? "Starting RabbitMQ"
 
 #Checking if the user already exists or not
-if (( $(rabbitmqctl list_users -q | grep -qw "roboshop") != 0 )); then
+rabbitmqctl list_users -q | grep -qw "roboshop"
+if (( $? != 0 )); then
     rabbitmqctl add_user roboshop roboshop123
     validate $? "Adding Rabbitmq User"
 else
