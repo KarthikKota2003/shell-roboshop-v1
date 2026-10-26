@@ -57,8 +57,9 @@ validate $? "Configuring Java Version"
 #Configuring Java Version in Maven
 echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
 source /etc/profile.d/java.sh
+echo $JAVA_HOME
 validate $? "Configuring Java Version in Maven"
-echo $JAVA_HOME 
+ 
 
 echo "Total time for script execution is $SECONDS"
 echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
