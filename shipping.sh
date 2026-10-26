@@ -60,7 +60,6 @@ source /etc/profile.d/java.sh
 echo $JAVA_HOME
 validate $? "Configuring Java Version in Maven"
 
-echo "$(mvn -v)"
 
 #Creating system user
 id roboshop &>> $logs_file
