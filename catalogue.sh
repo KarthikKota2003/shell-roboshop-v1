@@ -1,0 +1,68 @@
+#!/bin/bash
+
+domain_name="kartheekops92.online"
+
+# Creating logs folder and logs file
+logs_folder="/var/log/roboshop"
+logs_file=${logs_folder}/${0}.log
+
+mkdir -p $logs_folder 
+
+#Setting colors for log printing
+R="\e[31m"
+G="\e[32m" 
+Y="\e[33m"
+N="\e[0m"
+B="\e[34m"
+
+timestamp(){
+    date "+%F %T"
+}
+
+#Function to validate command execution
+validate(){
+    if (( $1 != 0));then
+        echo -e "$(timestamp) ${R}[ERROR]${N} ${2} is ${R}FAILED${N}" | tee -a $logs_file
+        exit 1
+    else
+        echo -e "$(timestamp) [INFO] ${2} is ${G}SUCCESS${N}" | tee -a $logs_file 
+    fi
+}
+
+echo -e "$(timestamp) ${B}[INFO]${N} ==== Script started execution ====" | tee -a $logs_file
+
+#Installing Nodejs
+dnf module disable nodejs -y &>> $logs_file
+dnf module enable nodejs:24 -y &>> $logs_file
+dnf install nodejs -y &>> $logs_file
+validate $? "Installing Nodejs"
+
+#Creating system user
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+validate $? "Creating System User"
+
+#Creating app directory
+mkdir -p /app
+validate $? "Creating App Directory"
+
+#Downloading and unzipping code
+curl -L -o /tmp/catalogue.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/catalogue-v4.zip &>> $logs_file
+cd /app
+unzip /tmp/catalogue.zip &>> $logs_file
+validate $? "Unzipping code"
+
+#Installing dependencies
+npm install &>> $logs_file
+validate $? "Installing dependencies"
+
+#Creating SystemD file
+sed -i "s/DOMAIN_NAME/$domain_name/g" catalogue.service
+cp catalogue.service /etc/systemd/system/catalogue.service
+
+#Starting catalogue service
+systemctl daemon-reload
+systemctl enable catalogue
+systemctl start catalogue
+
+echo "Total time for script execution is $SECONDS"
+echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
