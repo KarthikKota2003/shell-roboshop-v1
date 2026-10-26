@@ -93,7 +93,7 @@ validate $? "Installing MongoDB Client"
 #Checking if data exists or not
 if (( $(mongosh --host "mongodb.$domain_name" --quiet --eval 'db.getSiblingDB("catalogue").products.countDocuments()') != 11 ));then
     #Loading Data
-    mongosh --host "mongodb.$domain_name" </app/db/master-data.js
+    mongosh --host "mongodb.$domain_name" </app/db/master-data.js &>> $logs_file
     validate $? "Loading Data into MongoDB"
 else
     echo -e "Data already exists ... ${Y}SKIPPING${N}"

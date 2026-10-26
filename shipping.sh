@@ -85,6 +85,27 @@ mvn clean package &>> $logs_file
 validate $? "Installing dependencies"
 
 mv target/shipping.jar shipping.jar
+validate $? "Moving jar file"
+
+#Installing mysql client
+dnf install mysql -y &>> $logs_file
+validate $? "Installing MySQL Client"
+
+#Loading master data
+mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/master-data.sql &>> $logs_file
+validate $? "Loading master data"
+
+#Creating app user
+mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/app-user.sql &>> $logs_file
+validate $? "Creating app user"
+
+sed -i "s/DOMAIN_NAME/$domain_name/g" $script_dir/shipping.service
+cp $script_dir/shippping.service /etc/systemd/system/shipping.service
+
+systemctl daemon-reload
+systemctl enable shipping &>> $logs_file
+systemctl restart shipping &>> $logs_file
+validate $? "Starting/Restarting Shipping"
  
 
 echo "Total time for script execution is $SECONDS"
