@@ -99,5 +99,9 @@ else
     echo -e "Data already exists ... ${Y}SKIPPING${N}"
 fi
 
+#Restarting catalogue service
+systemctl restart catalogue
+validate $? "Restarting Catalogue"
+
 echo "Total time for script execution is $SECONDS"
 echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
