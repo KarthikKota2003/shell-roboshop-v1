@@ -83,5 +83,15 @@ systemctl daemon-reload
 systemctl enable catalogue
 systemctl start catalogue
 
+cp $script_dir/mongo.repo /etc/yum.repos.d/mongo.repo
+
+#Installing MongoDB client
+dnf install mongodb-mongosh -y
+validate $? "Installing MongoDB Client"
+
+#Loading Data
+mongosh --host "mongodb.$domain_name" </app/db/master-data.js
+validate $? "Loading Data into MongoDB"
+
 echo "Total time for script execution is $SECONDS"
 echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
