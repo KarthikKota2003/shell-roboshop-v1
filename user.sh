@@ -78,7 +78,7 @@ validate $? "Installing dependencies"
 sed -i "s/DOMAIN_NAME/$domain_name/g" $script_dir/user.service
 cp $script_dir/user.service /etc/systemd/system/user.service
 
-#Starting catalogue service
+#Starting User service
 systemctl daemon-reload
 systemctl enable user &>> $logs_file
 systemctl start user
