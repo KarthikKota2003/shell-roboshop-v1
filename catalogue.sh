@@ -1,7 +1,7 @@
 #!/bin/bash
 
 domain_name="kartheekops92.online"
-script_dir=dirname "$(realpath $0)"
+script_dir=$(dirname "$(realpath $0)")
 
 # Creating logs folder and logs file
 logs_folder="/var/log/roboshop"
