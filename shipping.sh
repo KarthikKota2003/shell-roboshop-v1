@@ -50,5 +50,15 @@ dnf module enable maven:3.9 -y &>> $logs_file
 dnf install maven java-25-openjdk-devel -y &>> $logs_file
 validate $? "Installing Java and Maven"
 
+#Configuring java version
+alternatives --set java /usr/lib/jvm/java-25-openjdk/bin/java 
+validate $? "Configuring Java Version"
+
+#Configuring Java Version in Maven
+echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
+source /etc/profile.d/java.sh
+validate $? "Configuring Java Version in Maven"
+echo $JAVA_HOME 
+
 echo "Total time for script execution is $SECONDS"
 echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
