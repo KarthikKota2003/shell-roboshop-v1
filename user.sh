@@ -80,8 +80,12 @@ cp $script_dir/user.service /etc/systemd/system/user.service
 
 #Starting catalogue service
 systemctl daemon-reload
-systemctl enable user
+systemctl enable user &>> $logs_file
 systemctl start user
+
+#Restarting User Service
+systemctl restart user
+validate "Restarting User"
 
 echo "Total time for script execution is $SECONDS"
 echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
