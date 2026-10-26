@@ -75,7 +75,7 @@ npm install &>> $logs_file
 validate $? "Installing dependencies"
 
 #Creating SystemD file
-sed -i "s/DOMAIN_NAME/$domain_name/g" catalogue.service
+sed -i "s/DOMAIN_NAME/$domain_name/g" $script_dir/catalogue.service
 cp $script_dir/catalogue.service /etc/systemd/system/catalogue.service
 
 #Starting catalogue service
