@@ -86,7 +86,7 @@ systemctl start catalogue
 cp $script_dir/mongo.repo /etc/yum.repos.d/mongo.repo
 
 #Installing MongoDB client
-dnf install mongodb-mongosh -y
+dnf install mongodb-mongosh -y &>> $logs_file
 validate $? "Installing MongoDB Client"
 
 #Checking if data exists or not
