@@ -85,7 +85,7 @@ systemctl start user
 
 #Restarting User Service
 systemctl restart user
-validate "Restarting User"
+validate $? "Restarting User"
 
 echo "Total time for script execution is $SECONDS"
 echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
