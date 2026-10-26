@@ -82,6 +82,7 @@ cp $script_dir/user.service /etc/systemd/system/user.service
 systemctl daemon-reload
 systemctl enable user &>> $logs_file
 systemctl start user
+validate $? "Starting User"
 
 #Restarting User Service
 systemctl restart user
