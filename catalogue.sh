@@ -41,6 +41,10 @@ else
     echo "Running under root user..." | tee -a $logs_file
 fi
 
+#Removing old code
+rm -rf /app
+validate $? "Removing Old Code"
+
 #Installing Nodejs
 dnf module disable nodejs -y &>> $logs_file
 dnf module enable nodejs:24 -y &>> $logs_file
