@@ -91,16 +91,21 @@ validate $? "Moving jar file"
 dnf install mysql -y &>> $logs_file
 validate $? "Installing MySQL Client"
 
-#Loading master data
-mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/master-data.sql &>> $logs_file
-validate $? "Loading master data"
+data_count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file)
+if [ -z "$data_count" ] || [ "$data_count" -eq 0 ];then
+    #Loading master data
+    mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/master-data.sql &>> $logs_file
+    validate $? "Loading master data"
+else
+    echo -e "Data already exists ... ${Y}SKIPPING${N}"
+fi
 
 #Creating app user
 mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql &>> $logs_file
 validate $? "Creating app user"
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" $script_dir/shipping.service
-cp $script_dir/shippping.service /etc/systemd/system/shipping.service
+cp $script_dir/shipping.service /etc/systemd/system/shipping.service
 
 systemctl daemon-reload
 systemctl enable shipping &>> $logs_file
