@@ -74,7 +74,7 @@ validate $? "Unzipping code"
 python3.14 -m venv /app/.venv &>> $logs_file
 validate $? "Creating Virutal Environment"
 
-/app/.venv/bin/pip install -r requirements.txt
+/app/.venv/bin/pip install -r requirements.txt &>> $logs_file
 validate $? "Installing dependencies"
 
 
