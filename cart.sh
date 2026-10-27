@@ -1,92 +1,15 @@
 #!/bin/bash
 
-domain_name="kartheekops92.online"
-script_dir=$(dirname "$(realpath $0)")
+app_name="cart"
 
-# Creating logs folder and logs file
-logs_folder="/var/log/roboshop"
-logs_file=${logs_folder}/${0}.log
+check_user
 
-mkdir -p $logs_folder 
+app_setup
 
-#Setting colors for log printing
-R="\e[31m"
-G="\e[32m" 
-Y="\e[33m"
-N="\e[0m"
-B="\e[34m"
+nodejs_setup
 
-timestamp(){
-    date "+%F %T"
-}
+system_setup
 
-#Function to validate command execution
-validate(){
-    if (( $1 != 0));then
-        echo -e "$(timestamp) ${R}[ERROR]${N} ${2} is ${R}FAILED${N}" | tee -a $logs_file
-        exit 1
-    else
-        echo -e "$(timestamp) [INFO] ${2} is ${G}SUCCESS${N}" | tee -a $logs_file 
-    fi
-}
+restart
 
-echo -e "$(timestamp) ${B}[INFO]${N} ==== Script started execution ====" | tee -a $logs_file
-
-#Checking if the script is running under root user or not
-user_id=$(id -u)
-if (( $user_id != 0 )); then
-    echo "This script is not running under root user, please check..." | tee -a $logs_file
-    exit 1
-else
-    echo "Running under root user..." | tee -a $logs_file
-fi
-
-#Removing old code
-rm -rf /app
-validate $? "Removing Old Code"
-
-#Installing Nodejs
-dnf module disable nodejs -y &>> $logs_file
-dnf module enable nodejs:24 -y &>> $logs_file
-dnf install nodejs -y &>> $logs_file
-validate $? "Installing Nodejs"
-
-#Creating system user
-id roboshop &>> $logs_file
-if (( $? != 0 ));then
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
-    validate $? "Creating System User"
-else
-    echo -e "User already exists ... ${Y}SKIPPING${N}" 
-fi
-
-#Creating app directory
-mkdir -p /app
-validate $? "Creating App Directory"
-
-#Downloading and unzipping code
-curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip &>> $logs_file
-cd /app
-unzip /tmp/cart.zip &>> $logs_file
-validate $? "Unzipping code"
-
-#Installing dependencies
-npm install &>> $logs_file
-validate $? "Installing dependencies"
-
-#Creating SystemD file
-sed -i "s/DOMAIN_NAME/$domain_name/g" $script_dir/cart.service
-cp $script_dir/cart.service /etc/systemd/system/cart.service
-
-#Starting cart service
-systemctl daemon-reload
-systemctl enable cart &>> $logs_file
-systemctl start cart
-validate $? "Starting Cart"
-
-#Restarting Cart Service
-systemctl restart cart
-validate $? "Restarting Cart"
-
-echo "Total time for script execution is $SECONDS"
-echo -e "$(timestamp) ${B}[INFO]${N} ==== Script completed execution ====" | tee -a $logs_file
+total_time
